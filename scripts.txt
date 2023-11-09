@@ -1,0 +1,12 @@
+//To get TLS versions
+cat full_scan_logs.json | jq '.cert.cipherVersion' | sort | uniq -c 
+
+
+//Get organizations for issuing certificates
+cat full_scan_logs.json | jq '.certificateChain | .[].issuer.O' | sort | uniq -c | sort -k 1 -rn 
+
+//Number of certificates
+cat full_scan_logs.json | jq '.certificateChain | .[].issuer.O' | wc -l
+
+//Print the number of valid domains that use CT in their certificateChain
+cat full_scan_logs.json | jq '[.certificateChain | .[].extension.ct_precert_scts]' | grep '\[' | wc -l
